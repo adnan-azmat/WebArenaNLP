@@ -9,7 +9,7 @@ def generate_from_huggingface_completion(
     max_new_tokens: int,
     stop_sequences: list[str] | None = None,
 ) -> str:
-    client = Client(model_endpoint, timeout=60)
+    client = Client(model_endpoint, headers = {"Authorization": "Bearer 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"}, timeout=60)
     generation: str = client.generate(
         prompt=prompt,
         temperature=temperature,

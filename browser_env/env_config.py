@@ -1,13 +1,25 @@
-# websites domain
 import os
 
-REDDIT = os.environ.get("REDDIT", "")
-SHOPPING = os.environ.get("SHOPPING", "")
-SHOPPING_ADMIN = os.environ.get("SHOPPING_ADMIN", "")
-GITLAB = os.environ.get("GITLAB", "")
-WIKIPEDIA = os.environ.get("WIKIPEDIA", "")
-MAP = os.environ.get("MAP", "")
-HOMEPAGE = os.environ.get("HOMEPAGE", "")
+# Define the URLs
+REDDIT = "http://ec2-3-131-244-37.us-east-2.compute.amazonaws.com:9999"
+SHOPPING = "http://ec2-3-131-244-37.us-east-2.compute.amazonaws.com:7770"
+SHOPPING_ADMIN = "http://ec2-3-131-244-37.us-east-2.compute.amazonaws.com:7780/admin"
+GITLAB = "http://ec2-3-131-244-37.us-east-2.compute.amazonaws.com:8023"
+WIKIPEDIA = "http://ec2-3-131-244-37.us-east-2.compute.amazonaws.com:8888/wikipedia_en_all_maxi_2022-05/A/User:The_other_Kiwix_guy/Landing"
+MAP = "http://ec2-3-131-244-37.us-east-2.compute.amazonaws.com:3000"
+HOMEPAGE = "PASS"  # The home page is not currently hosted in the demo site
+
+# Set the URLs in the environment
+os.environ["SHOPPING"] = SHOPPING
+os.environ["SHOPPING_ADMIN"] = SHOPPING_ADMIN
+os.environ["REDDIT"] = REDDIT
+os.environ["GITLAB"] = GITLAB
+os.environ["MAP"] = MAP
+os.environ["WIKIPEDIA"] = WIKIPEDIA
+os.environ["HOMEPAGE"] = HOMEPAGE
+
+print("Done setting up URLs")
+
 
 assert (
     REDDIT

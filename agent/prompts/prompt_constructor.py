@@ -78,7 +78,7 @@ class PromptConstructor(object):
         elif "huggingface" in self.lm_config.provider:
             # https://huggingface.co/blog/llama2#how-to-prompt-llama-2
             # https://github.com/facebookresearch/llama/blob/main/llama/generation.py#L320
-            if "Llama-2" in self.lm_config.model:
+            if True:
                 if self.lm_config.mode == "chat":
                     B_INST, E_INST = "[INST]", "[/INST]"
                     B_SYS, E_SYS = "<<SYS>>\n", "\n<</SYS>>\n\n"

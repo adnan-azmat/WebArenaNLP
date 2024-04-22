@@ -12,6 +12,30 @@ from pathlib import Path
 
 import openai
 
+# set the URLs of each website, we use the demo sites as an example
+os.environ[
+    "SHOPPING"
+] = "http://ec2-3-131-244-37.us-east-2.compute.amazonaws.com:7770"
+os.environ[
+    "SHOPPING_ADMIN"
+] = "http://ec2-3-131-244-37.us-east-2.compute.amazonaws.com:7780/admin"
+os.environ[
+    "REDDIT"
+] = "http://ec2-3-131-244-37.us-east-2.compute.amazonaws.com:9999"
+os.environ[
+    "GITLAB"
+] = "http://ec2-3-131-244-37.us-east-2.compute.amazonaws.com:8023"
+os.environ[
+    "MAP"
+] = "http://ec2-3-131-244-37.us-east-2.compute.amazonaws.com:3000"
+os.environ[
+    "WIKIPEDIA"
+] = "http://ec2-3-131-244-37.us-east-2.compute.amazonaws.com:8888/wikipedia_en_all_maxi_2022-05/A/User:The_other_Kiwix_guy/Landing"
+os.environ[
+    "HOMEPAGE"
+] = "PASS"  # The home page is not currently hosted in the demo site
+print("Done setting up URLs")
+
 from agent import (
     Agent,
     PromptAgent,
@@ -61,7 +85,7 @@ def config() -> argparse.Namespace:
         description="Run end-to-end evaluation on the benchmark"
     )
     parser.add_argument(
-        "--render", action="store_true", help="Render the browser"
+        "--render", action="store_true", help="Render the browser", default=True
     )
     parser.add_argument(
         "--slow_mo",
@@ -111,8 +135,8 @@ def config() -> argparse.Namespace:
     )
 
     # lm config
-    parser.add_argument("--provider", type=str, default="openai")
-    parser.add_argument("--model", type=str, default="gpt-3.5-turbo-0613")
+    parser.add_argument("--provider", type=str, default="huggingface")
+    parser.add_argument("--model", type=str, default="meta-llama/Llama-2-7b-chat-hf")
     parser.add_argument("--mode", type=str, default="chat")
     parser.add_argument("--temperature", type=float, default=1.0)
     parser.add_argument("--top_p", type=float, default=0.9)
@@ -228,7 +252,7 @@ def test(
     }
 
     env = ScriptBrowserEnv(
-        headless=not args.render,
+        headless=False,
         slow_mo=args.slow_mo,
         observation_type=args.observation_type,
         current_viewport_only=args.current_viewport_only,
@@ -256,17 +280,20 @@ def test(
                     cookie_file_name = os.path.basename(_c["storage_state"])
                     comb = get_site_comb_from_filepath(cookie_file_name)
                     temp_dir = tempfile.mkdtemp()
-                    # subprocess to renew the cookie
-                    subprocess.run(
-                        [
-                            "python",
-                            "browser_env/auto_login.py",
-                            "--auth_folder",
-                            temp_dir,
-                            "--site_list",
-                            *comb,
-                        ]
-                    )
+
+                    import argparse
+                    import browser_env.auto_login as auto_login
+
+                    args2 = argparse.Namespace(auth_folder=temp_dir, site_list=comb)
+
+                    if not args2.site_list:
+                        auto_login.main()
+                    else:
+                        if "all" in args2.site_list:
+                            auto_login.main(auth_folder=args2.auth_folder)
+                        else:
+                            auto_login.renew_comb(args2.site_list, auth_folder=args2.auth_folder) 
+
                     _c["storage_state"] = f"{temp_dir}/{cookie_file_name}"
                     assert os.path.exists(_c["storage_state"])
                     # update the config file

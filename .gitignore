@@ -157,3 +157,8 @@ config_files*/*7.json
 config_files*/*8.json
 config_files*/*9.json
 config_files*/test.json
+
+
+text-generation-inference-1.3.4
+result/*
+.auth_temp/*

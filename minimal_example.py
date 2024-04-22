@@ -2,11 +2,12 @@
 # type: ignore
 
 import json
-import os
+
 import re
 import subprocess
 import time
 
+import os
 SLEEP = 1.5
 # set the URLs of each website, we use the demo sites as an example
 os.environ[
@@ -32,10 +33,14 @@ os.environ[
 ] = "PASS"  # The home page is not currently hosted in the demo site
 print("Done setting up URLs")
 
-# First, run `python scripts/generate_test_data.py` to generate the config files
-p = subprocess.run(
-    ["python", "scripts/generate_test_data.py"], capture_output=True
-)
+import scripts.generate_test_data as generate_test_data
+
+generate_test_data.main()
+
+# # First, run `python scripts/generate_test_data.py` to generate the config files
+# p = subprocess.run(
+#     ["python", "scripts/generate_test_data.py"], capture_output=True
+# )
 
 # It will generate individual config file for each test example in config_files
 assert os.path.exists("config_files/0.json")
@@ -50,8 +55,14 @@ with open("config_files/0.json", "r") as f:
 
 print("Done generating config files with the correct URLs")
 
+# run command mkdir -p ./.auth
+subprocess.run(["mkdir", "-p", "./.auth"])
+
+import browser_env.auto_login as auto_login
+auto_login.main()
+
 # run bash prepare.sh to save all account cookies, this only needs to be done once
-subprocess.run(["bash", "prepare.sh"])
+# subprocess.run(["bash", "prepare.sh"])
 print("Done saving account cookies")
 
 # Init an environment
@@ -69,7 +80,7 @@ from browser_env import (
 from evaluation_harness.evaluators import evaluator_router
 
 # Init the environment
-env = ScriptBrowserEnv(
+env = ScriptBrowserEnv( 
     headless=False,
     slow_mo=100,
     observation_type="accessibility_tree",
