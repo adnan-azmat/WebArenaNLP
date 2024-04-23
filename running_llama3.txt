@@ -1,0 +1,22 @@
+0 - shopping admin
+9 - map
+10 - map
+37 - map
+38 - map (PASS)
+57 - map
+58 - map
+59 - map
+61 - map
+70 - map (PASS)
+71 - map
+73 - map (PASS)
+76 - map
+256 - map
+266 - wikipedia, map
+356 - map
+364 - map
+365 - map
+429 - wikipedia, map
+761 - map
+765 - map
+767 - map
